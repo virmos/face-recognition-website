@@ -1,4 +1,4 @@
-import mainScreen from "./views/app.js"
+import mainScreen from "./views/mainScreen.js"
 
 function setScreen(screen) {
     document.getElementById("app").innerHTML = screen.content

@@ -1,24 +1,8 @@
-import express from 'express'
-import path from 'path'
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
 import dotenv from "dotenv"
 import mongodb from "mongodb"
-import ClassDAO from "./public/js/models/classrooms.js"
+import ClassDAO from "./public/js/models/classroomsDAO.js"
+import app from './app.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const app = express()
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-const viewsDir = path.join(__dirname, 'views')  
-app.use(express.static(path.join(__dirname, './public/')))
-app.get('/', (req, res) => res.sendFile(path.join(viewsDir, 'index.html')))
-
-// connect to mongodb
 dotenv.config()
 const MongoClient = mongodb.MongoClient
 const port = process.env.PORT || 8000
@@ -35,9 +19,9 @@ process.env.CLASS_DB_URI,
     process.exit(1)
 })
 .then(async client => {
-    try { await ClassDAO.injectDB(client) } 
+    try { 
+        await ClassDAO.injectDB(client)
+    } 
     catch (e) { console.error(e) }
     app.listen(port, () => console.log(`Listening on port ${port}!`))
 })
-
-export default app
