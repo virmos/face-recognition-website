@@ -70,11 +70,11 @@ export default class ClassDAO {
             const attendance = classroom.attendance[0]
             const studentsList = attendance.studentsAttended
             let absentStudentIds = []
+            
             for (let studentIndex in studentsList) {
                 absentStudentIds.push(studentsList[studentIndex].id)
             }
-            
-            return absentStudentIds 
+            return absentStudentIds
         } catch (e) {
             console.error(
                 `Unable to convert cursor to array or problem counting documents, ${e}`,

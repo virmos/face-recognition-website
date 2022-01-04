@@ -20,6 +20,7 @@ process.env.CLASS_DB_URI,
 })
 .then(async client => {
     try { 
+        console.log("connected to mongodb!")
         await ClassDAO.injectDB(client)
     } 
     catch (e) { console.error(e) }

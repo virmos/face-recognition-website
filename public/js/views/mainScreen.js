@@ -1,4 +1,3 @@
-
 const mainScreen = `
 <header class="" id="header">
     <div class="d-flex flex-column" id="menu">
@@ -61,9 +60,15 @@ const mainScreen = `
                     <div class="animatedFadeInUp" id="col1">
                         <div class="resume-item">
                             <div class="card"> 
-                                <img src="https://www.w3schools.com/howto/img_avatar2.png" alt="Avatar" style="width:100%">
+                                <img src="https://scontent.fhan3-3.fna.fbcdn.net/v/t1.6435-9/35051895_702892616768923_1148192638239768576_n.jpg?_nc_cat=108&ccb=1-5&_nc_sid=174925&_nc_ohc=aKKUF5guOLQAX8iJUUe&_nc_oc=AQkr2eRsyqQtjvSyJNO6TI7cjSMbc5KckRETHsXJqIfqCfnOEXGZWoEgZMj47spsK70&_nc_ht=scontent.fhan3-3.fna&oh=00_AT-YwZdE5vjx1NXBQi9Cb9FVuXeHmE0v6aEwVaDbzQSpkA&oe=61E4AB38" alt="Avatar" style="width:100%">
                                 <div class="text-center card-container">
-                                    <em> Ha Dong Giang </em>
+                                    <em> Long Gooner </em>
+                                </div> 
+                            </div>
+                            <div class="card"> 
+                                <img src="https://scontent.fhan3-3.fna.fbcdn.net/v/t1.6435-9/35051895_702892616768923_1148192638239768576_n.jpg?_nc_cat=108&ccb=1-5&_nc_sid=174925&_nc_ohc=aKKUF5guOLQAX8iJUUe&_nc_oc=AQkr2eRsyqQtjvSyJNO6TI7cjSMbc5KckRETHsXJqIfqCfnOEXGZWoEgZMj47spsK70&_nc_ht=scontent.fhan3-3.fna&oh=00_AT-YwZdE5vjx1NXBQi9Cb9FVuXeHmE0v6aEwVaDbzQSpkA&oe=61E4AB38" alt="Avatar" style="width:100%">
+                                <div class="text-center card-container">
+                                    <em> Long Gooner </em>
                                 </div> 
                             </div>
                         </div>
@@ -131,74 +136,77 @@ function onload() {
         const classId = formSubscribe.classId.value
     }) 
 
-    // Promise.all([
+    Promise.all([
     //     faceapi.nets.faceRecognitionNet.loadFromUri('/resources/models'),
     //     faceapi.nets.faceLandmark68Net.loadFromUri('/resources/models'),
     //     faceapi.nets.ssdMobilenetv1.loadFromUri('/resources/models'),
-    // ]).then(start)
+    ]).then(start)
+    
+    async function start() {
+        const imageUpload = document.getElementById('imageUpload')
+        const container = document.getElementById("camera")
+        const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+        const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
 
-    // async function start() {
-    //     const imageUpload = document.getElementById('imageUpload')
-    //     const container = document.getElementById("camera")
-    //     const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    //     const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+        const section = document.getElementById('cameraContainer')
+        const displaySize = {width: 9*section.offsetWidth/10, height: 8*section.offsetHeight/10}
 
-    //     const section = document.getElementById('cameraContainer')
-    //     const displaySize = {width: 9*section.offsetWidth/10, height: 8*section.offsetHeight/10}
+        // const labeledFaceDescriptors = await loadLabeledImages()
+        // const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.8)
 
-    //     const labeledFaceDescriptors = await loadLabeledImages()
-    //     const faceMatcher = new faceapi.FaceMatcher(labeledFaceDescriptors, 0.8)
+        let image, canvas
+        let faces = []
+        imageUpload.addEventListener('change', async() => {
+            
+            axios.get(`/get?module=cs231`).then(response => console.log(response.data))
 
-    //     let image, canvas
-    //     let faces = []
-    //     imageUpload.addEventListener('change', async() => {
-    //         if (image)  image.remove()
-    //         if (canvas) canvas.remove()
-    //         image = await faceapi.bufferToImage(imageUpload.files[0])
-    //         canvas = faceapi.createCanvasFromMedia(image)
+            if (image)  image.remove()
+            if (canvas) canvas.remove()
+            image = await faceapi.bufferToImage(imageUpload.files[0])
+            canvas = faceapi.createCanvasFromMedia(image)
 
-    //         container.append(image)
-    //         container.append(canvas)
+            container.append(image)
+            container.append(canvas)
 
-    //         let times = displaySize.height / image.height
-    //         let newImageDimensions = {width: image.width * times, height: image.height * times}
+            let times = displaySize.height / image.height
+            let newImageDimensions = {width: image.width * times, height: image.height * times}
 
-    //         faceapi.matchDimensions(image, newImageDimensions)
-    //         faceapi.matchDimensions(canvas, newImageDimensions)
+            faceapi.matchDimensions(image, newImageDimensions)
+            faceapi.matchDimensions(canvas, newImageDimensions)
 
-    //         const recognitions = await faceapi.detectAllFaces(image).withFaceLandmarks()
-    //         const resizedRecognitions = faceapi.resizeResults(recognitions, displaySize)
-    //         const results = resizedRecognitions.map(face => faceMatcher.findBestMatch(face.descriptor))
-    //         results.forEach((result, i) => {
-    //             const box = result[i].detection.box
-    //             const drawBox = new faceapi.draw.DrawBox(box, {label: result.toString()})
-    //             faces.push(result.toString())
-    //             drawBox.draw(canvas)
-        //         ClassController.apiUpdateClassAttendance(faces)
-        //         onResumeChanges(apiGetClassAttendance())
-        //     })
-        // })
-    // }
+            const recognitions = await faceapi.detectAllFaces(image).withFaceLandmarks()
+            const resizedRecognitions = faceapi.resizeResults(recognitions, displaySize)
+            const results = resizedRecognitions.map(face => faceMatcher.findBestMatch(face.descriptor))
+            results.forEach((result, i) => {
+                const box = result[i].detection.box
+                const drawBox = new faceapi.draw.DrawBox(box, {label: result.toString()})
+                faces.push(result.toString())
+                drawBox.draw(canvas)
+            //     ClassController.apiUpdateClassAttendance(faces)
+            //     onResumeChanges(apiGetClassAttendance())
+            })
+        })
+    }
 
-    // function loadLabeledImages() {
-    //     const labels = ['Black Widow', 'Captain America', 'Thor', 'Tony Stark', 'Jim Rhodes']
-    //     const realLabels = {'Black Widow': '617d7351c4fcaea5ec39ea16', 
-    //                         'Captain America': '617bf08dfd2f40aecfe87212', 
-    //                         'Thor': '617bf098fd2f40aecfe87213', 
-    //                         'Tony Stark': '617d7363c4fcaea5ec39ea17', 
-    //                         'Jim Rhodes': '617bf02afd2f40aecfe87211'}
-    //     return Promise.all(
-    //         labels.map(async label => {
-    //             const descriptions = []
-    //             for (let i = 1; i <= 2; i++) {
-    //                 const img = await faceapi.fetchImage(`https://raw.githubusercontent.com/WebDevSimplified/Face-Recognition-JavaScript/master/labeled_images/${label}/${i}.jpg`)
-    //                 const recognitions = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
-    //                 descriptions.push(recognitions.descriptor)
-    //             }
-    //             return new faceapi.LabeledFaceDescriptors(realLabels[label], descriptions)
-    //         })
-    //     )
-    // }
+    function loadLabeledImages() {
+        const labels = ['Black Widow', 'Captain America', 'Thor', 'Tony Stark', 'Jim Rhodes']
+        const realLabels = {'Black Widow': '617d7351c4fcaea5ec39ea16', 
+                            'Captain America': '617bf08dfd2f40aecfe87212', 
+                            'Thor': '617bf098fd2f40aecfe87213', 
+                            'Tony Stark': '617d7363c4fcaea5ec39ea17', 
+                            'Jim Rhodes': '617bf02afd2f40aecfe87211'}
+        return Promise.all(
+            labels.map(async label => {
+                const descriptions = []
+                for (let i = 1; i <= 2; i++) {
+                    const img = await faceapi.fetchImage(`https://raw.githubusercontent.com/WebDevSimplified/Face-Recognition-JavaScript/master/labeled_images/${label}/${i}.jpg`)
+                    const recognitions = await faceapi.detectSingleFace(img).withFaceLandmarks().withFaceDescriptor()
+                    descriptions.push(recognitions.descriptor)
+                }
+                return new faceapi.LabeledFaceDescriptors(realLabels[label], descriptions)
+            })
+        )
+    }
 }
 
 export default {
