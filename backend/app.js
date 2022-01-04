@@ -20,7 +20,7 @@ mongoose.connect(config.MONGODB_URI).then(() => {
 
 const app = express()
 app.use(cors())
-// app.use(express.static('build'))
+app.use(express.static('build'))
 app.use(express.json())
 app.use(morgan(
   (tokens, req, res) => {

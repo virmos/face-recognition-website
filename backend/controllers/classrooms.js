@@ -107,7 +107,6 @@ ClassroomsRouter.put('/:id', (request, response, next) => {
   const startOfDay = new Date()
   startOfDay.setUTCHours(0, 0, 0, 0)
 
-  ClassDAO = await conn.db(process.env.CLASS_NS).collection("classes")
   Classroom.updateOne(
     {
       'module': {
