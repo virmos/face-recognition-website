@@ -168,7 +168,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   margin: 1rem 0;
 }
 
-/* @media (max-width: 1199px) {
+@media (max-width: 1199px) {
   #header {
       left: -20rem;
       padding: 0;
@@ -176,7 +176,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   #main {
       padding-left: 0 !important;
   }
-} */
+}
 
 /*--------------------------------------------------------------
 # Hero section

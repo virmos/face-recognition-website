@@ -12,23 +12,15 @@ const get = (id) => {
     .then(response => response.data)
 }
 
-const create = newObject => {
-    return axios.post(baseUrl, newObject)
-    .then(response => response.data)
-}
-  
-const remove = (id) => {
-    return axios.delete(`${baseUrl}/${id}`)
+const create = () => {
+    return axios.post(baseUrl)
     .then(response => response.data)
 }
 
 const update = (id) => {
-    console.log(id)
-    console.log(typeof(id))
-    console.log(id.trim())
     return axios.put(`${baseUrl}/${id}`)
     .then(response => response.data)
 }
 
-const personServices = { getAll, get, create, remove, update }
+const personServices = { getAll, get, create, update }
 export default personServices

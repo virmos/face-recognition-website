@@ -4,13 +4,6 @@ const ClassroomsRouter = require('express').Router()
 
 const ObjectId = require('mongodb').ObjectId
 
-ClassroomsRouter.get('/info', (request, response) => {
-  Classroom.find({}).then(classrooms => {
-    response.send(`<div>There are ${classrooms.length} absent Classrooms</div>
-                <div>${new Date()}</div>`)
-  })
-})
-
 ClassroomsRouter.get('/', (request, response, next) => {
   const startOfDay = new Date()
   startOfDay.setUTCHours(0, 0, 0, 0)
@@ -113,6 +106,8 @@ ClassroomsRouter.put('/:id', (request, response, next) => {
 
   const startOfDay = new Date()
   startOfDay.setUTCHours(0, 0, 0, 0)
+
+  ClassDAO = await conn.db(process.env.CLASS_NS).collection("classes")
   Classroom.updateOne(
     {
       'module': {
@@ -121,7 +116,8 @@ ClassroomsRouter.put('/:id', (request, response, next) => {
     },
     {
       $set: {
-        'attendance.$[inner].studentsAttended.$[outer].status': true
+        // hardcoded because mongodb only allows 1 positional argument
+        'attendance.0.studentsAttended.$[outer].status': true
       }
     },
     {
@@ -131,11 +127,6 @@ ClassroomsRouter.put('/:id', (request, response, next) => {
             ObjectId(id)
           ]
         },
-        'inner.created_at': {
-          $gte: [
-            ObjectId(id)
-          ]
-        }
       }]
     })
     .then(updatedAttendance => {

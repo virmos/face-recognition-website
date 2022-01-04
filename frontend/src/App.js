@@ -27,6 +27,7 @@ const App = () => {
   const handleOnSubmit = (event) => {
     event.preventDefault()
     setModule(event.target['classId'].value)
+    studentServices.create()
   }
   return (
     <div>
