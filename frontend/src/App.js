@@ -28,6 +28,7 @@ const App = () => {
     event.preventDefault()
     setModule(event.target['classId'].value)
     studentServices.create()
+    getAllStudents()
   }
   return (
     <div>

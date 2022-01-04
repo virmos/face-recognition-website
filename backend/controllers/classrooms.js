@@ -8,39 +8,42 @@ ClassroomsRouter.get('/', (request, response, next) => {
   const startOfDay = new Date()
   startOfDay.setUTCHours(0, 0, 0, 0)
 
-  const classroomQuery = {
-    'module': {
-      $eq: 'cs231'
+  const classroomQuery = [
+    {
+      $match: {
+        'module': {
+          $eq: 'cs231'
+        },
+      }
     },
-    'attendance.studentsAttended': {
-      '$elemMatch': {
-        'status': {
+    {
+      $unwind: '$attendance'
+    },
+    {
+      $unwind: '$attendance.studentsAttended'
+    },
+    {
+      $match: {
+        'attendance.studentsAttended.status': {
           '$eq': false
         }
       }
     },
-    'attendance': {
-      '$elemMatch': {
-        'created_at': {
-          '$gte': startOfDay
-          ,
-        }
-      }
-    }
-  }
+  ]
 
-  Classroom.find({ classroomQuery }).then(classrooms => {
-    const classroom = classrooms[0]
-    const attendance = classroom.attendance[0]
-    const studentsList = attendance.studentsAttended
+  Classroom.aggregate(classroomQuery).then(classrooms => {
     let absentStudentsIds = []
-    for (let studentIndex in studentsList) {
-      absentStudentsIds.push(studentsList[studentIndex].id)
-    }
+    classrooms.forEach(classroom => {
+      const attendance = classroom.attendance
+      const studentId = attendance.studentsAttended.id
+      absentStudentsIds.push(studentId)
+    })
+    console.log(absentStudentsIds)
 
-    const studentQuery = { '_id': { $in: absentStudentsIds } }
+    const studentQuery = { _id: { $in: absentStudentsIds } }
 
-    Student.find({ studentQuery }).then(students => {
+    Student.find(studentQuery).then(students => {
+      console.log(studentQuery)
       var absentStudentsList = []
       for (let studentIndex in students) {
         absentStudentsList.push({
